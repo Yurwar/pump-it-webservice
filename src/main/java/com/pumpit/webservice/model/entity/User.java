@@ -40,6 +40,13 @@ public abstract class User implements UserDetails {
     @Column(name = "date_of_birth", columnDefinition = "DATE", nullable = false)
     private LocalDate dateOfBirth;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "sex")
+    private Sex sex;
+
+    @Column(name = "profile_picture_path")
+    private String profilePicturePath;
+
     @ElementCollection(targetClass = Authority.class, fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_authorities", joinColumns = @JoinColumn(name = "user_id"))
