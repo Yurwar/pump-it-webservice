@@ -3,7 +3,11 @@ package com.pumpit.webservice.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Data
 @NoArgsConstructor
@@ -12,6 +16,10 @@ import java.util.Set;
 public class Trainer extends User {
     @Column(name = "company")
     private String company;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainer", cascade = CascadeType.PERSIST)
+
+    @OneToMany(fetch = LAZY, mappedBy = "trainer", cascade = PERSIST)
     private Set<Client> clients;
+
+    @OneToMany(fetch = LAZY, mappedBy = "trainer", cascade = ALL)
+    private List<Training> trainings;
 }

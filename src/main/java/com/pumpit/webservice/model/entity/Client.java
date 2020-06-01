@@ -4,10 +4,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
+
+import static javax.persistence.FetchType.*;
 
 @Data
 @NoArgsConstructor
@@ -18,6 +18,11 @@ public class Client extends User {
     private double weight;
     @Column
     private int height;
-    @ManyToOne(fetch = FetchType.EAGER)
+
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "trainer_id")
     private Trainer trainer;
+
+    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL, mappedBy = "client")
+    private List<Training> trainings;
 }
