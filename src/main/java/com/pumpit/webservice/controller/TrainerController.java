@@ -31,4 +31,9 @@ public class TrainerController {
                                     @RequestBody Client client) {
         trainerService.addClientForTrainerId(id, client);
     }
+
+    @PostMapping
+    public void addNewTrainer(@RequestBody Trainer trainer) {
+        trainerService.addNewTrainer(trainer);
+    }
 }

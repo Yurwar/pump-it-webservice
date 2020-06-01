@@ -37,6 +37,11 @@ public class DefaultTrainerService implements TrainerService {
         return trainerRepository.getOne(id).getClients();
     }
 
+    @Override
+    public void addNewTrainer(Trainer trainer) {
+        trainerRepository.save(trainer);
+    }
+
     private void addClientForTrainer(Trainer trainer, Client newClient) {
         Set<Client> clients = trainer.getClients();
         clients.add(newClient);

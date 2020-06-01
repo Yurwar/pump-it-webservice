@@ -11,4 +11,6 @@ public interface TrainerService {
     Set<Client> getClientsForTrainerId(Long id);
 
     void addClientForTrainerId(Long id, Client client);
+
+    void addNewTrainer(Trainer trainer);
 }
