@@ -1,6 +1,8 @@
 package com.pumpit.webservice.model.entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,10 +10,8 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@EqualsAndHashCode(callSuper = true, exclude = {"trainer"})
 @Entity
 public class Client extends User {
     @Column

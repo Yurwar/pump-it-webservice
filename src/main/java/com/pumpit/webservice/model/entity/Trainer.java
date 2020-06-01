@@ -1,21 +1,17 @@
 package com.pumpit.webservice.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"clients"})
 @Entity
 public class Trainer extends User {
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainer")
+    @Column(name = "company")
+    private String company;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainer", cascade = CascadeType.PERSIST)
     private Set<Client> clients;
 }
