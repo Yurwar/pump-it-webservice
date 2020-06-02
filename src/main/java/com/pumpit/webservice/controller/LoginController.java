@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/login")
+@RestController
 public class LoginController {
     private final UserService userService;
 
@@ -15,7 +15,7 @@ public class LoginController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public Model loginUser(@RequestBody String username,
                            @RequestBody String password,
                            Model model) {
