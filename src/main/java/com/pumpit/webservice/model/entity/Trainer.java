@@ -17,7 +17,7 @@ public class Trainer extends User {
     @Column(name = "company")
     private String company;
 
-    @OneToMany(fetch = LAZY, mappedBy = "trainer", cascade = PERSIST)
+    @OneToMany(fetch = LAZY, mappedBy = "trainer")
     private Set<Client> clients;
 
     @OneToMany(fetch = LAZY, mappedBy = "trainer", cascade = ALL)
