@@ -1,5 +1,6 @@
 package com.pumpit.webservice.controller;
 
+import com.pumpit.webservice.controller.dto.TrainerDto;
 import com.pumpit.webservice.model.entity.Client;
 import com.pumpit.webservice.model.entity.Trainer;
 import com.pumpit.webservice.model.service.TrainerService;
@@ -17,8 +18,21 @@ public class TrainerController {
     }
 
     @GetMapping("/{id}")
-    public Trainer getTrainerById(@PathVariable Long id) {
-        return trainerService.getTrainerById(id);
+    public TrainerDto getTrainerById(@PathVariable Long id) {
+        Trainer trainer = trainerService.getTrainerById(id);
+
+        return TrainerDto.builder()
+                .username(trainer.getUsername())
+                .firstName(trainer.getFirstName())
+                .lastName(trainer.getLastName())
+                .authorities(trainer.getAuthorities())
+                .clientCount(trainer.getClients().size())
+                .company(trainer.getCompany())
+                .dateOfBirth(trainer.getDateOfBirth())
+                .id(trainer.getId())
+                .profilePicturePath(trainer.getProfilePicturePath())
+                .sex(trainer.getSex())
+                .build();
     }
 
     @GetMapping("/{id}/clients")
