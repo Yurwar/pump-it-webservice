@@ -1,6 +1,9 @@
 package com.pumpit.webservice.controller;
 
 import com.pumpit.webservice.controller.dto.*;
+import com.pumpit.webservice.controller.dto.ClientDto;
+import com.pumpit.webservice.controller.dto.TrainerDto;
+import com.pumpit.webservice.controller.dto.TrainerRegisterDto;
 import com.pumpit.webservice.model.entity.Authority;
 import com.pumpit.webservice.model.entity.Client;
 import com.pumpit.webservice.model.entity.Trainer;
@@ -10,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/trainers")
@@ -40,8 +45,25 @@ public class TrainerController {
     }
 
     @GetMapping("/{id}/clients")
-    public Set<Client> getClientsForTrainer(@PathVariable Long id) {
-        return trainerService.getClientsForTrainerId(id);
+    public Set<ClientDto> getClientsForTrainer(@PathVariable Long id) {
+        return trainerService.getClientsForTrainerId(id).stream().map(client -> ClientDto.builder()
+                .username(client.getUsername())
+                .firstName(client.getFirstName())
+                .lastName(client.getLastName())
+                .authorities(client.getAuthorities())
+                .dateOfBirth(client.getDateOfBirth())
+                .id(client.getId())
+                .profilePicturePath(client.getProfilePicturePath())
+                .sex(client.getSex())
+                .height(client.getHeight())
+                .weight(client.getWeight())
+
+                .trainerFirstName(Optional.ofNullable(client.getTrainer())
+                        .map(Trainer::getFirstName).orElse(null))
+
+                .trainerLastName(Optional.ofNullable(client.getTrainer())
+                        .map(Trainer::getLastName).orElse(null))
+                .build()).collect(Collectors.toSet());
     }
 
     @PostMapping("/{id}/clients")
