@@ -79,6 +79,12 @@ public class DbInitializer {
 
         trainerService.addNewTrainer(trainer1);
 
+        client1.setTrainer(trainer1);
+        client2.setTrainer(trainer1);
+
+        clientService.addNewClient(client1);
+        clientService.addNewClient(client2);
+
         Exercise exercise1 = new Exercise();
         exercise1.setName("Bench press");
         Exercise exercise2 = new Exercise();

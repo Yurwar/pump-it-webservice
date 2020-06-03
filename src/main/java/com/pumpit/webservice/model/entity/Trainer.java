@@ -11,7 +11,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"clients"})
+@EqualsAndHashCode(callSuper = true, exclude = {"clients", "trainings"})
 @Entity
 public class Trainer extends User {
     @Column(name = "company")
