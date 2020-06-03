@@ -4,6 +4,8 @@ import com.pumpit.webservice.model.entity.Client;
 import com.pumpit.webservice.model.entity.Training;
 import com.pumpit.webservice.model.repository.ClientRepository;
 import com.pumpit.webservice.model.service.ClientService;
+import com.pumpit.webservice.util.exception.UserExistsException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +25,12 @@ public class DefaultClientService implements ClientService {
 
     @Override
     public void addNewClient(Client client) {
-        clientRepository.save(client);
+        try {
+            clientRepository.save(client);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new UserExistsException("Client with username " + client.getUsername() + " already exists");
+        }
     }
 
     @Override

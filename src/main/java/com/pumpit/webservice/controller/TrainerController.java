@@ -1,9 +1,13 @@
 package com.pumpit.webservice.controller;
 
+import com.pumpit.webservice.controller.dto.RegisterResponseDto;
 import com.pumpit.webservice.controller.dto.TrainerDto;
+import com.pumpit.webservice.controller.dto.TrainerRegisterDto;
+import com.pumpit.webservice.model.entity.Authority;
 import com.pumpit.webservice.model.entity.Client;
 import com.pumpit.webservice.model.entity.Trainer;
 import com.pumpit.webservice.model.service.TrainerService;
+import com.pumpit.webservice.util.exception.UserExistsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -47,7 +51,29 @@ public class TrainerController {
     }
 
     @PostMapping
-    public void addNewTrainer(@RequestBody Trainer trainer) {
-        trainerService.addNewTrainer(trainer);
+    public RegisterResponseDto addNewTrainer(@RequestBody TrainerRegisterDto trainerRegisterDto) {
+        Trainer trainer = new Trainer();
+
+        trainer.setUsername(trainerRegisterDto.getUsername());
+        trainer.setCompany(trainerRegisterDto.getCompany());
+        trainer.setFirstName(trainerRegisterDto.getFirstName());
+        trainer.setLastName(trainerRegisterDto.getLastName());
+        trainer.setPassword(trainerRegisterDto.getPassword());
+        trainer.setDateOfBirth(trainerRegisterDto.getDateOfBirth());
+        trainer.setSex(trainerRegisterDto.getSex());
+        trainer.setEnabled(Boolean.TRUE);
+        trainer.setAuthorities(Set.of(Authority.TRAINER));
+
+        boolean success = true;
+        try {
+            trainerService.addNewTrainer(trainer);
+        } catch (UserExistsException e) {
+            success = false;
+        }
+
+        return RegisterResponseDto.builder()
+                .id(trainer.getId())
+                .isSuccessful(success)
+                .build();
     }
 }

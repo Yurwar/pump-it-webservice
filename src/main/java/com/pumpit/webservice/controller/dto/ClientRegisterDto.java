@@ -1,5 +1,6 @@
 package com.pumpit.webservice.controller.dto;
 
+import com.pumpit.webservice.model.entity.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,12 +13,12 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequestDTO {
+public class ClientRegisterDto {
     private String firstName;
     private String lastName;
     private String username;
     private String password;
-
+    private Sex sex;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 }

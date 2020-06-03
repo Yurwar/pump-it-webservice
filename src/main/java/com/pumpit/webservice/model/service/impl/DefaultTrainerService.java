@@ -4,6 +4,8 @@ import com.pumpit.webservice.model.entity.Client;
 import com.pumpit.webservice.model.entity.Trainer;
 import com.pumpit.webservice.model.repository.TrainerRepository;
 import com.pumpit.webservice.model.service.TrainerService;
+import com.pumpit.webservice.util.exception.UserExistsException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +41,12 @@ public class DefaultTrainerService implements TrainerService {
 
     @Override
     public void addNewTrainer(Trainer trainer) {
-        trainerRepository.save(trainer);
+        try {
+            trainerRepository.save(trainer);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new UserExistsException("Trainer with username " + trainer.getUsername() + " already exists");
+        }
     }
 
     private void addClientForTrainer(Trainer trainer, Client newClient) {

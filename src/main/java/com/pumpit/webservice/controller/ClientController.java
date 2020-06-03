@@ -1,12 +1,14 @@
 package com.pumpit.webservice.controller;
 
 import com.pumpit.webservice.controller.dto.ClientDto;
-import com.pumpit.webservice.controller.dto.RegisterRequestDTO;
+import com.pumpit.webservice.controller.dto.ClientRegisterDto;
+import com.pumpit.webservice.controller.dto.RegisterResponseDto;
 import com.pumpit.webservice.model.entity.Authority;
 import com.pumpit.webservice.model.entity.Client;
 import com.pumpit.webservice.model.entity.Trainer;
 import com.pumpit.webservice.model.entity.Training;
 import com.pumpit.webservice.model.service.ClientService;
+import com.pumpit.webservice.util.exception.UserExistsException;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,16 +54,29 @@ public class ClientController {
         return clientService.getTrainingsForClientId(id);
     }
 
-    @PostMapping(name="/", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void addNewClient(@RequestBody RegisterRequestDTO registerRequestDTO) {
+    @PostMapping
+    public RegisterResponseDto registerNewClient(@RequestBody ClientRegisterDto clientRegisterDto) {
         Client client = new Client();
-        client.setUsername(registerRequestDTO.getUsername());
-        client.setFirstName(registerRequestDTO.getFirstName());
-        client.setLastName(registerRequestDTO.getLastName());
-        client.setPassword(registerRequestDTO.getPassword());
-        client.setDateOfBirth(registerRequestDTO.getDateOfBirth());
+
+        client.setUsername(clientRegisterDto.getUsername());
+        client.setFirstName(clientRegisterDto.getFirstName());
+        client.setLastName(clientRegisterDto.getLastName());
+        client.setPassword(clientRegisterDto.getPassword());
+        client.setDateOfBirth(clientRegisterDto.getDateOfBirth());
+        client.setSex(clientRegisterDto.getSex());
         client.setEnabled(Boolean.TRUE);
         client.setAuthorities(Set.of(Authority.CLIENT));
-        clientService.addNewClient(client);
+
+        boolean success = true;
+        try {
+            clientService.addNewClient(client);
+        } catch (UserExistsException e) {
+            success = false;
+        }
+
+        return RegisterResponseDto.builder()
+                .id(client.getId())
+                .isSuccessful(success)
+                .build();
     }
 }
