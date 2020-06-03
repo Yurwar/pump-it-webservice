@@ -1,15 +1,12 @@
 package com.pumpit.webservice.controller;
 
-import com.pumpit.webservice.controller.dto.ClientDto;
-import com.pumpit.webservice.controller.dto.ClientRegisterDto;
-import com.pumpit.webservice.controller.dto.RegisterResponseDto;
-import com.pumpit.webservice.model.entity.Authority;
-import com.pumpit.webservice.model.entity.Client;
-import com.pumpit.webservice.model.entity.Trainer;
-import com.pumpit.webservice.model.entity.Training;
+import com.pumpit.webservice.controller.dto.*;
+import com.pumpit.webservice.model.entity.*;
 import com.pumpit.webservice.model.service.ClientService;
 import com.pumpit.webservice.util.exception.UserExistsException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,7 +52,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public RegisterResponseDto registerNewClient(@RequestBody ClientRegisterDto clientRegisterDto) {
+    public ResponseEntity<?> registerNewClient(@RequestBody ClientRegisterDto clientRegisterDto) {
         Client client = new Client();
 
         client.setUsername(clientRegisterDto.getUsername());
@@ -74,9 +71,21 @@ public class ClientController {
             success = false;
         }
 
-        return RegisterResponseDto.builder()
+        LoginResponseDto responseDto = new LoginResponseDto();
+
+        if (success) {
+            responseDto.setSuccessful(true);
+            responseDto.setUser(buildUserDto(client));
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
+        } else {
+            responseDto.setSuccessful(false);
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    private UserDto buildUserDto(final Client client) {
+        return UserDto.builder()
                 .id(client.getId())
-                .isSuccessful(success)
                 .build();
     }
 }
