@@ -1,16 +1,21 @@
 package com.pumpit.webservice.controller;
 
 import com.pumpit.webservice.controller.dto.ClientDto;
-import com.pumpit.webservice.controller.dto.TrainerDto;
+import com.pumpit.webservice.controller.dto.RegisterRequestDTO;
+import com.pumpit.webservice.model.entity.Authority;
 import com.pumpit.webservice.model.entity.Client;
 import com.pumpit.webservice.model.entity.Trainer;
 import com.pumpit.webservice.model.entity.Training;
 import com.pumpit.webservice.model.service.ClientService;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
-@RestController("/clients")
+@RestController
+@RequestMapping("/clients")
 public class ClientController {
     private final ClientService clientService;
 
@@ -33,8 +38,12 @@ public class ClientController {
                 .sex(client.getSex())
                 .height(client.getHeight())
                 .weight(client.getWeight())
-                .trainerFirstName(client.getTrainer().getFirstName())
-                .trainerLastName(client.getTrainer().getLastName())
+
+                .trainerFirstName(Optional.ofNullable(client.getTrainer())
+                .map(Trainer::getFirstName).orElse(null))
+
+                .trainerLastName(Optional.ofNullable(client.getTrainer())
+                        .map(Trainer::getLastName).orElse(null))
                 .build();
     }
 
@@ -43,8 +52,16 @@ public class ClientController {
         return clientService.getTrainingsForClientId(id);
     }
 
-    @PostMapping
-    public void addNewClient(@RequestBody Client client) {
+    @PostMapping(name="/", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void addNewClient(@RequestBody RegisterRequestDTO registerRequestDTO) {
+        Client client = new Client();
+        client.setUsername(registerRequestDTO.getUsername());
+        client.setFirstName(registerRequestDTO.getFirstName());
+        client.setLastName(registerRequestDTO.getLastName());
+        client.setPassword(registerRequestDTO.getPassword());
+        client.setDateOfBirth(registerRequestDTO.getDateOfBirth());
+        client.setEnabled(Boolean.TRUE);
+        client.setAuthorities(Set.of(Authority.CLIENT));
         clientService.addNewClient(client);
     }
 }

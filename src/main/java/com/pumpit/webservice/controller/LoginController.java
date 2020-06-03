@@ -5,6 +5,8 @@ import com.pumpit.webservice.controller.dto.LoginResponseDto;
 import com.pumpit.webservice.controller.dto.UserDto;
 import com.pumpit.webservice.model.entity.User;
 import com.pumpit.webservice.model.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +20,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public LoginResponseDto loginUser(@RequestBody CredentialsDto credentialsDto) {
+    public ResponseEntity<?> loginUser(@RequestBody CredentialsDto credentialsDto) {
         User user = userService.getUserByUsername(credentialsDto.getUsername());
         boolean authenticated = userService.checkPasswordIdentity(user, credentialsDto.getPassword());
 
@@ -28,11 +30,11 @@ public class LoginController {
         if (authenticated) {
             responseDto.setSuccessful(true);
             responseDto.setUser(buildUserDto(user));
+            return new ResponseEntity<>(responseDto, HttpStatus.OK);
         } else {
             responseDto.setSuccessful(false);
+            return new ResponseEntity<>(responseDto, HttpStatus.UNAUTHORIZED);
         }
-
-        return responseDto;
     }
 
     private UserDto buildUserDto(final User user) {
