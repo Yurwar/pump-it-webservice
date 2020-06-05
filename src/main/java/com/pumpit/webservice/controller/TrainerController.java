@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,8 +46,8 @@ public class TrainerController {
     }
 
     @GetMapping("/{id}/clients")
-    public Set<ClientDto> getClientsForTrainer(@PathVariable Long id) {
-        return trainerService.getClientsForTrainerId(id).stream().map(client -> ClientDto.builder()
+    public ClientResponsesDto getClientsForTrainer(@PathVariable Long id) {
+        List<ClientDto> clientDtos= trainerService.getClientsForTrainerId(id).stream().map(client -> ClientDto.builder()
                 .username(client.getUsername())
                 .firstName(client.getFirstName())
                 .lastName(client.getLastName())
@@ -57,13 +58,12 @@ public class TrainerController {
                 .sex(client.getSex())
                 .height(client.getHeight())
                 .weight(client.getWeight())
-
                 .trainerFirstName(Optional.ofNullable(client.getTrainer())
                         .map(Trainer::getFirstName).orElse(null))
-
                 .trainerLastName(Optional.ofNullable(client.getTrainer())
                         .map(Trainer::getLastName).orElse(null))
-                .build()).collect(Collectors.toSet());
+                .build()).collect(Collectors.toList());
+        return new ClientResponsesDto(clientDtos);
     }
 
     @PostMapping("/{id}/clients")
