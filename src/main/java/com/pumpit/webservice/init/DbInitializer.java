@@ -93,8 +93,38 @@ public class DbInitializer {
         exercise3.setName("Press exercise");
         Exercise exercise4 = new Exercise();
         exercise4.setName("Hyperextension");
+        Exercise exercise5 = new Exercise();
+        exercise5.setName("Test exercise 5");
+        Exercise exercise6 = new Exercise();
+        exercise6.setName("Test exercise 6");
+        Exercise exercise7 = new Exercise();
+        exercise7.setName("Test exercise 7");
+        Exercise exercise8 = new Exercise();
+        exercise8.setName("Test exercise 8");
+        Exercise exercise9 = new Exercise();
+        exercise9.setName("Test exercise 9");
+        Exercise exercise10 = new Exercise();
+        exercise10.setName("Test exercise 10");
+        Exercise exercise11 = new Exercise();
+        exercise11.setName("Test exercise 11");
+        Exercise exercise12 = new Exercise();
+        exercise12.setName("Test exercise 12");
+        Exercise exercise13 = new Exercise();
+        exercise13.setName("Test exercise 13");
+        Exercise exercise14 = new Exercise();
+        exercise14.setName("Test exercise 13");
+        Exercise exercise15 = new Exercise();
+        exercise15.setName("Test exercise 13");
+        Exercise exercise16 = new Exercise();
+        exercise16.setName("Test exercise 13");
+        Exercise exercise17 = new Exercise();
+        exercise17.setName("Test exercise 13");
 
-        exerciseRepository.saveAll(List.of(exercise1, exercise2, exercise3, exercise4));
+        exerciseRepository.saveAll(List.of(exercise1,
+                exercise2,
+                exercise3,
+                exercise4, exercise5,exercise6,exercise7,exercise8,exercise9,exercise10,exercise11,exercise12,
+                exercise13, exercise14,exercise15,exercise16,exercise17));
 
         ExerciseSet exerciseSet1 = new ExerciseSet();
         exerciseSet1.setExercise(exercise1);
