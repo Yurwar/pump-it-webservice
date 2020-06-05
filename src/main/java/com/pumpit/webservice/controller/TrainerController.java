@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -70,6 +71,40 @@ public class TrainerController {
     public void addClientForTrainer(@PathVariable Long id,
                                     @RequestBody Client client) {
         trainerService.addClientForTrainerId(id, client);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTrainer(@PathVariable Long id, @RequestBody UpdateTrainerDto updateTrainerDto) {
+        Trainer trainer = trainerService.getTrainerById(id);
+
+        System.out.println("TRIGG");
+        trainer.setFirstName(updateTrainerDto.getFirstName());
+        trainer.setLastName(updateTrainerDto.getLastName());
+        trainer.setSex(updateTrainerDto.getSex());
+        trainer.setCompany(updateTrainerDto.getCompany());
+
+        System.out.println(updateTrainerDto.getOldPassword());
+        System.out.println(updateTrainerDto.getNewPassword());
+        System.out.println(updateTrainerDto.getNewPasswordRepeat());
+
+        if (Objects.nonNull(updateTrainerDto.getOldPassword()) &&
+                Objects.nonNull(updateTrainerDto.getNewPassword()) &&
+                Objects.nonNull(updateTrainerDto.getNewPasswordRepeat())) {
+            System.out.println("CHECK PASS");
+            if (!updateTrainerDto.getOldPassword().equals(trainer.getPassword())) {
+                System.out.println("INC PASS");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else if (!updateTrainerDto.getNewPassword().equals(updateTrainerDto.getNewPasswordRepeat())) {
+                System.out.println("DO NOT MATCH");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else {
+                trainer.setPassword(updateTrainerDto.getNewPassword());
+                trainerService.updateTrainer(trainer);
+            }
+        }
+        System.out.println("SUCC");
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping

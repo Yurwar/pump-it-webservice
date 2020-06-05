@@ -55,7 +55,7 @@ public class DbInitializer {
         client2.setUsername("CodeGangsta44");
         client2.setSex(Sex.MALE);
         client2.setAuthorities(Collections.singleton(Authority.CLIENT));
-        client2.setProfilePicturePath("/images/client_2.png");
+        client2.setProfilePicturePath("/images/roman.jpeg");
         client2.setWeight(85);
         client2.setHeight(185);
         client2.setDateOfBirth(LocalDate.of(2000, 2, 27));

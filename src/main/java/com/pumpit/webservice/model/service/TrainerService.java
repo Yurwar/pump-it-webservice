@@ -13,4 +13,6 @@ public interface TrainerService {
     void addClientForTrainerId(Long id, Client client);
 
     void addNewTrainer(Trainer trainer);
+
+    void updateTrainer(Trainer trainer);
 }

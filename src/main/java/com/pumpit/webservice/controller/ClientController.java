@@ -4,12 +4,14 @@ import com.pumpit.webservice.controller.dto.*;
 import com.pumpit.webservice.model.entity.*;
 import com.pumpit.webservice.model.service.ClientService;
 import com.pumpit.webservice.util.exception.UserExistsException;
+import org.dom4j.util.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -49,6 +51,40 @@ public class ClientController {
     @GetMapping("/{id}/trainings")
     public List<Training> getTrainingsForClientId(@PathVariable Long id) {
         return clientService.getTrainingsForClientId(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateClient(@PathVariable Long id, @RequestBody UpdateClientDto updateClientDto) {
+        Client client = clientService.getClientById(id);
+
+        System.out.println("TRIGG");
+        client.setFirstName(updateClientDto.getFirstName());
+        client.setLastName(updateClientDto.getLastName());
+        client.setSex(updateClientDto.getSex());
+        client.setHeight(Integer.parseInt(updateClientDto.getHeight()));
+        client.setWeight(Double.parseDouble(updateClientDto.getWeight()));
+
+        System.out.println(updateClientDto.getOldPassword());
+        System.out.println(updateClientDto.getNewPassword());
+        System.out.println(updateClientDto.getNewPasswordRepeat());
+
+        if (Objects.nonNull(updateClientDto.getOldPassword()) &&
+                Objects.nonNull(updateClientDto.getNewPassword()) &&
+                Objects.nonNull(updateClientDto.getNewPasswordRepeat())) {
+            System.out.println("CHECK PASS");
+            if (!updateClientDto.getOldPassword().equals(client.getPassword())) {
+                System.out.println("INC PASS");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else if (!updateClientDto.getNewPassword().equals(updateClientDto.getNewPasswordRepeat())) {
+                System.out.println("DO NOT MATCH");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else {
+                client.setPassword(updateClientDto.getNewPassword());
+            }
+        }
+        System.out.println("SUCC");
+        clientService.updateClient(client);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping

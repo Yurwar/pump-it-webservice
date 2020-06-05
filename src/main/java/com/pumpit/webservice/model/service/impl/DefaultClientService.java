@@ -37,4 +37,9 @@ public class DefaultClientService implements ClientService {
     public List<Training> getTrainingsForClientId(Long id) {
         return getClientById(id).getTrainings();
     }
+
+    @Override
+    public void updateClient(Client client) {
+        clientRepository.save(client);
+    }
 }
