@@ -3,14 +3,17 @@ package com.pumpit.webservice.model.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 @Data
 @NoArgsConstructor
+@ToString(exclude = {"trainer"})
 @EqualsAndHashCode(callSuper = true, exclude = {"trainer"})
 @Entity
 public class Client extends User {

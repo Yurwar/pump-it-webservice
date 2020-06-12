@@ -11,4 +11,6 @@ public interface ClientService {
     List<Training> getTrainingsForClientId(Long id);
 
     void addNewClient(Client client);
+
+    void updateClient(Client client);
 }

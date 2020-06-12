@@ -11,13 +11,13 @@ import static javax.persistence.FetchType.LAZY;
 
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, exclude = {"clients"})
+@EqualsAndHashCode(callSuper = true, exclude = {"clients", "trainings"})
 @Entity
 public class Trainer extends User {
     @Column(name = "company")
     private String company;
 
-    @OneToMany(fetch = LAZY, mappedBy = "trainer", cascade = PERSIST)
+    @OneToMany(fetch = LAZY, mappedBy = "trainer")
     private Set<Client> clients;
 
     @OneToMany(fetch = LAZY, mappedBy = "trainer", cascade = ALL)

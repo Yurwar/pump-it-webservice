@@ -4,15 +4,14 @@ import com.pumpit.webservice.model.entity.Client;
 import com.pumpit.webservice.model.entity.Training;
 import com.pumpit.webservice.model.repository.ClientRepository;
 import com.pumpit.webservice.model.service.ClientService;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import com.pumpit.webservice.util.exception.UserExistsException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class DefaultClientService implements ClientService, UserDetailsService {
+public class DefaultClientService implements ClientService {
     private final ClientRepository clientRepository;
 
     public DefaultClientService(ClientRepository clientRepository) {
@@ -25,18 +24,22 @@ public class DefaultClientService implements ClientService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return clientRepository.findClientByUsername(username).orElseThrow(() ->
-                new UsernameNotFoundException("User with username " + username + " not found"));
-    }
-
-    @Override
     public void addNewClient(Client client) {
-        clientRepository.save(client);
+        try {
+            clientRepository.save(client);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            throw new UserExistsException("Client with username " + client.getUsername() + " already exists");
+        }
     }
 
     @Override
     public List<Training> getTrainingsForClientId(Long id) {
         return getClientById(id).getTrainings();
+    }
+
+    @Override
+    public void updateClient(Client client) {
+        clientRepository.save(client);
     }
 }
